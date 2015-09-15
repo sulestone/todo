@@ -22,13 +22,15 @@
       <%= content_tag_for(:tr, @todos) do |todo| %>
             <td><%= todo.title %></td>
 
-            <% if todo.completed %>
-            <!-- <td><span class="glyphicon glyphicon-ok"></span></td> -->
-            <td><%= link_to 'UnComplete', "/todos/#{todo.id}/uncomplete" %></td>
-            <% else %>
-            <td><%= link_to 'Complete', "/todos/#{todo.id}/complete" %></td>
-            <td></td>
-            <% end %>
+           <td>
+        <%= link_to("/todos/#{todo.id}/toggle_completed") do %>
+          <% if todo.completed %>
+            <span class="glyphicon glyphicon-ok"></span>
+          <% else %>
+            <span class="glyphicon glyphicon-unchecked"></span>
+          <% end %>
+        <% end %>
+        </td>
 
             <td><%= link_to 'Show', todo %></td>
             <td><%= link_to 'Edit', edit_todo_path(todo) %></td>

@@ -1,30 +1,16 @@
 class TodosController < ApplicationController
   before_action :signed_in_user #prevents any of the methods from being run before signed_in_user on the user_helper.rb is executed
-  before_action :set_todo, only: [:show, :edit, :update, :destroy, :do_complete, :do_uncomplete]
+  before_action :set_todo, only: [:show, :edit, :update, :destroy, :toggle_completed]
   before_action :verify_correct_user, only: [:show, :edit, :update, :destroy]
 
-  def do_complete
-    @todo.completed = true
+  def toggle_completed
+    @todo.completed = !@todo.completed
     respond_to do |format|
       if @todo.save
-        format.html { redirect_to todos_path, notice: 'Todo was successfully created.' }
-        format.json { render :show, status: :created, location: @todo }
+        format.html { redirect_to todos_path }
+        format.json { render :show, status: :ok, location: @todo }
       else
-        format.html { render :new }
-        format.json { render json: @todo.errors, status: :unprocessable_entity }
-      end
-    end
-  end
-# ​
-  def do_uncomplete
-    @todo.completed = false
-    respond_to do |format|
-      if @todo.save
-        format.html { redirect_to todos_path, notice: 'Todo was successfully created.' }
-        format.json { render :show, status: :created, location: @todo }
-      else
-        format.html { render :new }
-        format.json { render json: @todo.errors, status: :unprocessable_entity }
+        # show some error message
       end
     end
   end
