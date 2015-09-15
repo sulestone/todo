@@ -1,6 +1,7 @@
 class TodosController < ApplicationController
   before_action :signed_in_user #prevents any of the methods from being run before signed_in_user on the user_helper.rb is executed
   before_action :set_todo, only: [:show, :edit, :update, :destroy, :do_complete, :do_uncomplete]
+  before_action :verify_correct_user, only: [:show, :edit, :update, :destroy]
 
   def do_complete
     @todo.completed = true
@@ -100,5 +101,10 @@ class TodosController < ApplicationController
     # Never trust parameters from the scary internet, only allow the white list through.
     def todo_params
       params.require(:todo).permit(:title, :completed)
+    end
+
+    def verify_correct_user
+      @todo = current_user.todos.find_by(id: params[:id])
+      redirect_to root_url, notice: 'You dont have access!' if @todo.nil?
     end
 end
